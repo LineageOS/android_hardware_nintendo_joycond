@@ -353,6 +353,7 @@ bool phys_ctlr::set_all_player_leds(bool on)
     for (int i = 0; i < 4; i++) {
         if (!set_player_led(i, on))
             return false;
+        usleep(5000);
     }
     return true;
 }
@@ -367,6 +368,7 @@ bool phys_ctlr::set_player_leds_to_player(int player)
     set_all_player_leds(false);
     for (int i = 0; i < player; i++) {
         set_player_led(i, true);
+        usleep(5000);
     }
     return true;
 }
