@@ -27,15 +27,17 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys)
             }
         } else if (ret == LIBEVDEV_READ_STATUS_SUCCESS) {
 #if defined(ANDROID) || defined(__ANDROID__)
-            /* remap the ZL and ZR buttons to analog trigger on android */
-            if (ev.type == EV_KEY && ev.code == BTN_TL2) {
-                libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z, ev.value);
-                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-                continue;
-            } else if (ev.type == EV_KEY && ev.code == BTN_TR2) {
-                libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ, ev.value);
-                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-                continue;
+            if (analog) {
+                /* remap the ZL and ZR buttons to analog trigger on android */
+                if (ev.type == EV_KEY && ev.code == BTN_TL2) {
+                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z, ev.value);
+                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                    continue;
+                } else if (ev.type == EV_KEY && ev.code == BTN_TR2) {
+                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ, ev.value);
+                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                    continue;
+            }
             }
 #endif
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
@@ -180,6 +182,19 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
 
     libevdev_set_name(virt_evdev, "Nintendo Switch Virtual Pro Controller");
 
+    
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Disable analog trigger emulation unless prop set
+    analog = false;
+
+    try {
+        if (std::stoi(android_utils::property_get(std::string("persist.joycond.analogtriggers"))) > 0)
+            analog = true;
+    } catch (const std::exception&) {
+        std::cout << "Failed to parse prop value!" << std::endl;
+    }
+#endif
+
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.
     libevdev_enable_event_type(virt_evdev, EV_KEY);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_SELECT, NULL);
@@ -194,9 +209,14 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_WEST, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR, NULL);
-#if !defined(ANDROID) && !defined(__ANDROID__)
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Only define these if analog emulation is disabled via prop
+    if (!analog) {
+#endif
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL2, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR2, NULL);
+#if defined(ANDROID) || defined(__ANDROID__)
+    }
 #endif
 
     struct input_absinfo absconfig = { 0 };
@@ -221,14 +241,16 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
 
     // Emulate analog triggers for android
 #if defined(ANDROID) || defined(__ANDROID__)
-    struct input_absinfo absconfig_fake = { 0 };
-    absconfig_fake.minimum = 0;
-    absconfig_fake.maximum = 1;
-    absconfig_fake.fuzz = 0;
-    absconfig_fake.flat = 0;
+    if (analog) {
+        struct input_absinfo absconfig_fake = { 0 };
+        absconfig_fake.minimum = 0;
+        absconfig_fake.maximum = 1;
+        absconfig_fake.fuzz = 0;
+        absconfig_fake.flat = 0;
 
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
+        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
+        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
+    }
 #endif
     libevdev_enable_event_type(virt_evdev, EV_FF);
     libevdev_enable_event_code(virt_evdev, EV_FF, FF_RUMBLE, NULL);

@@ -42,15 +42,17 @@ void virt_ctlr_combined::relay_events(std::shared_ptr<phys_ctlr> phys)
             }
 
 #if defined(ANDROID) || defined(__ANDROID__)
-            /* Second remap the ZL and ZR buttons to analog trigger and map the DPAD to a HAT on android */
-            if (phys == physl && ev.type == EV_KEY && ev.code == BTN_TL2) {
-                libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z, ev.value);
-                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-                continue;
-            } else if (phys == physr && ev.type == EV_KEY && ev.code == BTN_TR2) {
-                libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ, ev.value);
-                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
-                continue;
+            if (analog) {
+                /* Second remap the ZL and ZR buttons to analog trigger and map the DPAD to a HAT on android */
+                if (phys == physl && ev.type == EV_KEY && ev.code == BTN_TL2) {
+                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z, ev.value);
+                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                    continue;
+                } else if (phys == physr && ev.type == EV_KEY && ev.code == BTN_TR2) {
+                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ, ev.value);
+                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                    continue;
+                }
             }
 
             if (ev.type == EV_KEY) {
@@ -250,6 +252,18 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
 
     libevdev_set_name(virt_evdev, "Nintendo Switch Combined Joy-Cons");
 
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Disable analog trigger emulation unless prop set
+    analog = false;
+
+    try {
+        if (std::stoi(android_utils::property_get(std::string("persist.joycond.analogtriggers"))) > 0)
+            analog = true;
+    } catch (const std::exception&) {
+        std::cout << "Failed to parse prop value!" << std::endl;
+    }
+#endif
+   
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.
     libevdev_enable_event_type(virt_evdev, EV_KEY);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_SELECT, NULL);
@@ -270,9 +284,14 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
 #endif
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR, NULL);
-#if !defined(ANDROID) && !defined(__ANDROID__)
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Only define these if analog emulation is disabled via prop
+    if (!analog) {
+#endif
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL2, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR2, NULL);
+#if defined(ANDROID) || defined(__ANDROID__)
+    }
 #endif
 
     // Map the S triggers to these misc. buttons if not connected via serial.
@@ -294,7 +313,7 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RX, &absconfig);
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RY, &absconfig);
 
-    // Emulate analog triggers and HAT for android
+    // Emulate analog triggers (if prop set) and HAT for android
 #if defined(ANDROID) || defined(__ANDROID__)
     struct input_absinfo absconfig_fake = { 0 };
     absconfig_fake.minimum = 0;
@@ -302,8 +321,10 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
     absconfig_fake.fuzz = 0;
     absconfig_fake.flat = 0;
 
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
+    if (analog) {
+        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
+        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
+    }
 
     absconfig_fake.minimum = -1;
 

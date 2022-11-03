@@ -2,6 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
+	src/android_utils.cpp \
     src/ctlr_detector_android.cpp \
     src/ctlr_mgr.cpp \
     src/epoll_mgr.cpp \
@@ -16,7 +17,8 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 
 LOCAL_SHARED_LIBRARIES := \
-    libevdev \
+    libcutils \
+	libevdev \
     libnl \
     liblog
 

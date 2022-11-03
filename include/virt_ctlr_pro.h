@@ -5,6 +5,10 @@
 #include "phys_ctlr.h"
 #include "epoll_mgr.h"
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#include "android_utils.h"
+#endif
+
 #include <libevdev/libevdev.h>
 #include <map>
 #include <memory>
@@ -20,6 +24,9 @@ class virt_ctlr_pro : public virt_ctlr
         int uifd;
         std::map<int, struct ff_effect> rumble_effects;
         std::string mac;
+#if defined(ANDROID) || defined(__ANDROID__)
+        bool analog;
+#endif
 
         void relay_events(std::shared_ptr<phys_ctlr> phys);
         void handle_uinput_event();
