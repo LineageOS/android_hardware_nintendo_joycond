@@ -6,7 +6,7 @@
 #include "epoll_mgr.h"
 
 #if defined(ANDROID) || defined(__ANDROID__)
-#include "android_utils.h"
+#include "cutils/properties.h"
 #endif
 
 #include <libevdev/libevdev.h>

@@ -185,14 +185,7 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     
 #if defined(ANDROID) || defined(__ANDROID__)
     // Disable analog trigger emulation unless prop set
-    analog = false;
-
-    try {
-        if (std::stoi(android_utils::property_get(std::string("persist.joycond.analogtriggers"))) > 0)
-            analog = true;
-    } catch (const std::exception&) {
-        std::cout << "Failed to parse prop value!" << std::endl;
-    }
+    analog = (bool) ::property_get_int32("persist.joycond.analogtriggers", 0);
 #endif
 
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.

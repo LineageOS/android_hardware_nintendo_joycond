@@ -6,7 +6,7 @@
 #include "epoll_mgr.h"
 
 #if defined(ANDROID) || defined(__ANDROID__)
-#include "android_utils.h"
+#include "cutils/properties.h"
 #endif
 
 #include <libevdev/libevdev.h>
@@ -29,6 +29,7 @@ class virt_ctlr_combined : public virt_ctlr
         int pid;
 #if defined(ANDROID) || defined(__ANDROID__)
         bool analog;
+        int layout;
 #endif
 
 

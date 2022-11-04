@@ -2,7 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
-	src/android_utils.cpp \
     src/ctlr_detector_android.cpp \
     src/ctlr_mgr.cpp \
     src/epoll_mgr.cpp \
