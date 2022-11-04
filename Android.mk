@@ -27,6 +27,9 @@ LOCAL_REQUIRED_MODULES := \
     Vendor_057e_Product_2007.idc \
     Vendor_057e_Product_2008.idc \
     Vendor_057e_Product_2008.kl  \
+	Vendor_057e_Product_2018.kl  \
+	Vendor_057e_Product_2108.kl  \
+	Vendor_057e_Product_2118.kl  \
     Vendor_057e_Product_2009_Version_8001.idc \
     Vendor_057e_Product_2009_Version_8001.kl
 
@@ -56,6 +59,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_PREBUILT)
 
+# Combined JoyCons, Nintendo layout, digital triggers
 include $(CLEAR_VARS)
 LOCAL_MODULE := Vendor_057e_Product_2008.kl
 LOCAL_SRC_FILES := android/Vendor_057e_Product_2008.kl
@@ -65,9 +69,30 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_PREBUILT)
 
+# Combined JoyCons, Xbox layout, digital triggers
 include $(CLEAR_VARS)
-LOCAL_MODULE := Vendor_057e_Product_2008.idc
-LOCAL_SRC_FILES := android/Vendor_057e_Product_2008.idc
+LOCAL_MODULE := Vendor_057e_Product_2018.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_2018.kl
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_OWNER := nintendo
+include $(BUILD_PREBUILT)
+
+# Combined JoyCons, Nintendo layout, emulated analog triggers
+include $(CLEAR_VARS)
+LOCAL_MODULE := Vendor_057e_Product_2108.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_2108.kl
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_OWNER := nintendo
+include $(BUILD_PREBUILT)
+
+# Combined JoyCons, Xbox layout, emulated analog triggers
+include $(CLEAR_VARS)
+LOCAL_MODULE := Vendor_057e_Product_2118.idc
+LOCAL_SRC_FILES := android/Vendor_057e_Product_2118.idc
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/idc
 LOCAL_MODULE_TAGS := optional

@@ -251,17 +251,22 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
     }
 
     libevdev_set_name(virt_evdev, "Nintendo Switch Combined Joy-Cons");
+    pid = 0x2008;
 
 #if defined(ANDROID) || defined(__ANDROID__)
     // Disable analog trigger emulation unless prop set
     analog = false;
 
     try {
-        if (std::stoi(android_utils::property_get(std::string("persist.joycond.analogtriggers"))) > 0)
-            analog = true;
+        pid = pid +
+                0x100 * std::stoi(android_utils::property_get("persist.joycond.analogtriggers")) +
+                0x10 * std::stoi(android_utils::property_get("persist.joycond.layout"));
+
+        analog = (bool)((pid >> 8) - 0x20);
     } catch (const std::exception&) {
-        std::cout << "Failed to parse prop value!" << std::endl;
+        std::cout << "Failed to parse prop value(s)!" << std::endl;
     }
+
 #endif
    
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.
@@ -341,7 +346,7 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
 
     // Set the product information to a left joy-con's product info (but with virtual bus type)
     libevdev_set_id_vendor(virt_evdev, 0x57e);
-    libevdev_set_id_product(virt_evdev, 0x2008); // HACK?
+    libevdev_set_id_product(virt_evdev, pid);
     libevdev_set_id_bustype(virt_evdev, BUS_VIRTUAL);
     libevdev_set_id_version(virt_evdev, 0x0000);
 
