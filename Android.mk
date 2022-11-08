@@ -17,7 +17,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 
 LOCAL_SHARED_LIBRARIES := \
     libcutils \
-	libevdev \
+    libevdev \
     libnl \
     liblog
 
@@ -26,9 +26,9 @@ LOCAL_REQUIRED_MODULES := \
     Vendor_057e_Product_2007.idc \
     Vendor_057e_Product_2008.idc \
     Vendor_057e_Product_2008.kl  \
-	Vendor_057e_Product_2018.kl  \
-	Vendor_057e_Product_2108.kl  \
-	Vendor_057e_Product_2118.kl  \
+    Vendor_057e_Product_2018.kl  \
+    Vendor_057e_Product_2108.kl  \
+    Vendor_057e_Product_2118.kl  \
     Vendor_057e_Product_2009_Version_8001.idc \
     Vendor_057e_Product_2009_Version_8001.kl
 
