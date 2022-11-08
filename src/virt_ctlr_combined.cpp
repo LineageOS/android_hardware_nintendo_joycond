@@ -255,7 +255,7 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
 
 #if defined(ANDROID) || defined(__ANDROID__)
     // Set analog trigger emulation and controller layout from props
-    analog = (bool) ::property_get_int32("persist.joycond.analogtriggers", 0);
+    analog = ::property_get_int32("persist.joycond.analogtriggers", 0);
     layout = ::property_get_int32("persist.joycond.layout", 0);
 
     pid = pid

@@ -181,11 +181,18 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     }
 
     libevdev_set_name(virt_evdev, "Nintendo Switch Virtual Pro Controller");
-
+    pid = 0x2008;
     
 #if defined(ANDROID) || defined(__ANDROID__)
-    // Disable analog trigger emulation unless prop set
-    analog = (bool) ::property_get_int32("persist.joycond.analogtriggers", 0);
+    // Set analog trigger emulation and controller layout from props
+    analog = ::property_get_int32("persist.joycond.analogtriggers", 0);
+    layout = ::property_get_int32("persist.joycond.layout", 0);
+
+    pid = pid
+        | (analog << 8)
+        | (layout << 4);
+
+    std::cout << "Using product id " << pid << std::endl;
 #endif
 
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.
@@ -255,7 +262,7 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
 
     // Set the product information to a non-existent product info (but with virtual bus type)
     libevdev_set_id_vendor(virt_evdev, 0x57e);
-    libevdev_set_id_product(virt_evdev, 0x2008); // HACK?
+    libevdev_set_id_product(virt_evdev, pid); // HACK?
     libevdev_set_id_bustype(virt_evdev, BUS_VIRTUAL);
     libevdev_set_id_version(virt_evdev, 0x0000);
 

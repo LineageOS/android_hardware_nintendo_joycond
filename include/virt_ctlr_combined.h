@@ -28,7 +28,7 @@ class virt_ctlr_combined : public virt_ctlr
         std::string right_mac;
         int pid;
 #if defined(ANDROID) || defined(__ANDROID__)
-        bool analog;
+        int analog;
         int layout;
 #endif
 
