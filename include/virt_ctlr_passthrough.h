@@ -4,12 +4,21 @@
 #include "virt_ctlr.h"
 #include "phys_ctlr.h"
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#include "cutils/properties.h"
+#endif
+
+#include <libevdev/libevdev.h>
 #include <memory>
 
 class virt_ctlr_passthrough : public virt_ctlr
 {
     private:
         std::shared_ptr<phys_ctlr> phys;
+        int pid;
+#if defined(ANDROID) || defined(__ANDROID__)
+        int combined;
+#endif
 
     public:
         virt_ctlr_passthrough(std::shared_ptr<phys_ctlr> phys);

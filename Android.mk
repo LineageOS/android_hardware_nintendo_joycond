@@ -25,6 +25,7 @@ LOCAL_REQUIRED_MODULES := \
     Vendor_057e_Product_2006.idc \
     Vendor_057e_Product_2007.idc \
     Vendor_057e_Product_2008.idc \
+	Vendor_057e_Product_3008.idc \
     Vendor_057e_Product_2008.kl  \
     Vendor_057e_Product_2018.kl  \
     Vendor_057e_Product_2108.kl  \

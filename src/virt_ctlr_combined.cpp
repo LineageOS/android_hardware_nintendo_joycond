@@ -254,11 +254,13 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
     pid = 0x2008;
 
 #if defined(ANDROID) || defined(__ANDROID__)
-    // Set analog trigger emulation and controller layout from props
+    // Set individual/combined, analog trigger emulation, and controller layout from props
+    combined = ::property_get_int32("persist.joycond.combined", 0);
     analog = ::property_get_int32("persist.joycond.analogtriggers", 0);
     layout = ::property_get_int32("persist.joycond.layout", 0);
 
     pid = pid
+        + (~combined << 12)
         | (analog << 8)
         | (layout << 4);
 

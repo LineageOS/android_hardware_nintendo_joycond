@@ -1,6 +1,7 @@
 #include "virt_ctlr_passthrough.h"
 
 #include <iostream>
+#include <libevdev/libevdev-uinput.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <vector>
@@ -15,6 +16,28 @@ virt_ctlr_passthrough::virt_ctlr_passthrough(std::shared_ptr<phys_ctlr> phys) :
     if (fchmod(phys->get_fd(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH))
         std::cerr << "Failed to change evdev permissions; " << strerror(errno) << std::endl;
     phys->ungrab();
+
+    switch(phys->get_model()) {
+        case phys_ctlr::Model::Left_Joycon:
+            pid = 0x2006;
+            break;
+        case phys_ctlr::Model::Right_Joycon:
+            pid = 0x2007;
+            break;
+        default:
+            return;
+    }
+
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Check prop to decide individual/combined JoyCons
+    combined = ::property_get_int32("persist.joycond.combined", 1);
+
+    pid += (~combined << 12);
+
+    std::cout << "Using " << (combined ? "combined JoyCons only" : "individaul JoyCons only");
+#endif
+
+    libevdev_set_id_product(phys->get_evdev(), pid);
 }
 
 virt_ctlr_passthrough::~virt_ctlr_passthrough()
