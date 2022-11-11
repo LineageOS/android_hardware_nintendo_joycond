@@ -42,7 +42,7 @@ bool ctlr_detector_android::check_ctlr_attributes(std::string devpath)
 
     std::cout << "Input device connected vid: 0x" << std::hex << vid << " pid: 0x" << std::hex << pid << " accel: " << is_accel << std::endl;
 
-    if (vid == 0x57e)
+    if (vid != 0x57e)
         return false;
 
     switch (pid)
@@ -52,7 +52,7 @@ bool ctlr_detector_android::check_ctlr_attributes(std::string devpath)
         case 0x2009: // Pro Controller
         case 0x2017: // SNES Controller
         case 0x200e: // JoyCon Charging Grip
-            return true;
+            break;
 
         default:
             return false;
@@ -60,6 +60,8 @@ bool ctlr_detector_android::check_ctlr_attributes(std::string devpath)
 
     if (is_accel)
         return false;
+
+    return true;
 }
 
 //private
