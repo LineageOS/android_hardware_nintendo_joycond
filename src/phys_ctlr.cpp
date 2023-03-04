@@ -175,6 +175,24 @@ void phys_ctlr::handle_event(struct input_event const &ev)
                     break;
             }
             break;
+        case Model::Sio:
+            switch (code) {
+                case BTN_TL:
+                    l = val;
+                    break;
+                case BTN_TL2:
+                    zl = val;
+                    break;
+                case BTN_TR:
+                    r = val;
+                    break;
+                case BTN_TR2:
+                    zr = val;
+                    break;
+                default:
+                    break;
+            }
+            break;
         case Model::Left_Joycon:
             switch (code) {
                 case BTN_TL:
@@ -263,6 +281,10 @@ phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname) :
             model = Model::Snescon;
             std::cout << "Found SNES Controller\n";
             break;
+        case 0xf123:
+            model = Model::Sio;
+            std::cout << "Found Switch Lite\n";
+            break;
         default:
             model = Model::Unknown;
             std::cerr << "Unknown product id = " << std::hex << libevdev_get_id_product(evdev) << std::endl;
@@ -285,7 +307,7 @@ phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname) :
     std::string driver_name;
     std::getline(fname, driver_name);
     std::cout << "driver_name: " << driver_name << std::endl;
-    if (driver_name.find("Serial") != std::string::npos) {
+    if (driver_name.find("Serial") != std::string::npos || model == Model::Sio) {
         std::cout << "Serial joy-con detected\n";
         // Turn off player LEDs by default with serial joycons by default
         set_all_player_leds(false);
@@ -402,7 +424,7 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
 
     // leds don't function on android joycons so no way of the user knowing the pair state
 #if defined(ANDROID) || defined(__ANDROID__)
-    if (model != Model::Procon && model != Model::Snescon)
+    if (model != Model::Procon && model != Model::Snescon && model != Model::Sio)
         return PairingState::Waiting;
     else
         return PairingState::Lone;
@@ -422,6 +444,9 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
                 state = PairingState::Lone;
             else if (plus && minus)
                 state = PairingState::Virt_Procon;
+            break;
+        case Model::Sio:
+            state = PairingState::Virt_Procon;
             break;
         case Model::Left_Joycon:
             if (l ^ zl)

@@ -52,6 +52,7 @@ bool ctlr_detector_android::check_ctlr_attributes(std::string devpath)
         case 0x2009: // Pro Controller
         case 0x2017: // SNES Controller
         case 0x200e: // JoyCon Charging Grip
+        case 0xf123: // Sio
             break;
 
         default:

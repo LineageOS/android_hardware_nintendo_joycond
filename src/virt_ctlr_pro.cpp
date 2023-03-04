@@ -37,7 +37,31 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys)
                     libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ, ev.value);
                     ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
                     continue;
+                }
             }
+
+            if(phys->get_model() == phys_ctlr::Model::Sio && ev.type == EV_KEY) {
+                std::cout << "defining dpad remapping for sio\n";
+                switch (ev.code) {
+                    case BTN_DPAD_UP:
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_HAT0Y, -ev.value);
+                        ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    case BTN_DPAD_DOWN:
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_HAT0Y, ev.value);
+                        ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    case BTN_DPAD_LEFT:
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_HAT0X, -ev.value);
+                        ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    case BTN_DPAD_RIGHT:
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_HAT0X, ev.value);
+                        ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    default:
+                        break;
+                }
             }
 #endif
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
@@ -207,6 +231,14 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_EAST, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_NORTH, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_WEST, NULL);
+    #if !defined(ANDROID) && !defined(__ANDROID__)
+    if (phys->get_model() == phys_ctlr::Model::Sio) {
+        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_UP, NULL);
+        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_DOWN, NULL);
+        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_LEFT, NULL);
+        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_RIGHT, NULL);
+    }
+    #endif
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR, NULL);
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -236,6 +268,7 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     dpad_absconfig.maximum = 1;
     dpad_absconfig.fuzz = 0;
     dpad_absconfig.flat = 0;
+
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0X, &dpad_absconfig);
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0Y, &dpad_absconfig);
 
