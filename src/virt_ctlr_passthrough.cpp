@@ -12,6 +12,8 @@
 virt_ctlr_passthrough::virt_ctlr_passthrough(std::shared_ptr<phys_ctlr> phys) :
     phys(phys)
 {
+    bool combined = ::property_get_int32("persist.joycond.combined", 1);
+
     // Allow other processes to use the input now.
     if (fchmod(phys->get_fd(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH))
         std::cerr << "Failed to change evdev permissions; " << strerror(errno) << std::endl;
@@ -19,10 +21,10 @@ virt_ctlr_passthrough::virt_ctlr_passthrough(std::shared_ptr<phys_ctlr> phys) :
 
     switch(phys->get_model()) {
         case phys_ctlr::Model::Left_Joycon:
-            pid = 0x2006;
+            pid = combined ? 0x2006 : 0x3006;
             break;
         case phys_ctlr::Model::Right_Joycon:
-            pid = 0x2007;
+            pid = combined ? 0x2007 : 0x3007;
             break;
         default:
             return;

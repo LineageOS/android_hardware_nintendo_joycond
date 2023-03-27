@@ -59,8 +59,8 @@ include $(BUILD_PREBUILT)
 
 # Left Single JoyCon
 include $(CLEAR_VARS)
-LOCAL_MODULE := Vendor_057e_Product_2006.kl
-LOCAL_SRC_FILES := android/Vendor_057e_Product_2006.kl
+LOCAL_MODULE := Vendor_057e_Product_3006.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_3006.kl
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
 LOCAL_MODULE_TAGS := optional
@@ -69,8 +69,8 @@ include $(BUILD_PREBUILT)
 
 # Right Single JoyCon
 include $(CLEAR_VARS)
-LOCAL_MODULE := Vendor_057e_Product_2007.kl
-LOCAL_SRC_FILES := android/Vendor_057e_Product_2007.kl
+LOCAL_MODULE := Vendor_057e_Product_3007.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_3007.kl
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
 LOCAL_MODULE_TAGS := optional
