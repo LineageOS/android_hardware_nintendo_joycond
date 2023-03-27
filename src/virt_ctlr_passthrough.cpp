@@ -28,15 +28,6 @@ virt_ctlr_passthrough::virt_ctlr_passthrough(std::shared_ptr<phys_ctlr> phys) :
             return;
     }
 
-#if defined(ANDROID) || defined(__ANDROID__)
-    // Check prop to decide individual/combined JoyCons
-    combined = ::property_get_int32("persist.joycond.combined", 1);
-
-    pid += (~combined << 12);
-
-    std::cout << "Using " << (combined ? "combined JoyCons only" : "individaul JoyCons only");
-#endif
-
     libevdev_set_id_product(phys->get_evdev(), pid);
 }
 

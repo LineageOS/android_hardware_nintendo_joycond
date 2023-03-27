@@ -47,22 +47,32 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_PREBUILT)
 
-# Disabled idc for combined JoyCons
-include $(CLEAR_VARS)
-LOCAL_MODULE := Vendor_057e_Product_3008.idc
-LOCAL_SRC_FILES := android/disabled.idc
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/idc
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_OWNER := nintendo
-include $(BUILD_PREBUILT)
-
 # External idc for ProCon
 include $(CLEAR_VARS)
 LOCAL_MODULE := Vendor_057e_Product_2009_Version_8001.idc
 LOCAL_SRC_FILES := android/external.idc
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/idc
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_OWNER := nintendo
+include $(BUILD_PREBUILT)
+
+# Left Single JoyCon
+include $(CLEAR_VARS)
+LOCAL_MODULE := Vendor_057e_Product_2006.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_2006.kl
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_OWNER := nintendo
+include $(BUILD_PREBUILT)
+
+# Right Single JoyCon
+include $(CLEAR_VARS)
+LOCAL_MODULE := Vendor_057e_Product_2007.kl
+LOCAL_SRC_FILES := android/Vendor_057e_Product_2007.kl
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_PREBUILT)
@@ -101,16 +111,6 @@ include $(BUILD_PREBUILT)
 include $(CLEAR_VARS)
 LOCAL_MODULE := Vendor_057e_Product_2118.kl
 LOCAL_SRC_FILES := android/Vendor_057e_Product_2118.kl
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/idc
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_OWNER := nintendo
-include $(BUILD_PREBUILT)
-
-# ProCon layout
-include $(CLEAR_VARS)
-LOCAL_MODULE := Vendor_057e_Product_2009_Version_8001.kl
-LOCAL_SRC_FILES := android/Vendor_057e_Product_2008.kl
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/keylayout
 LOCAL_MODULE_TAGS := optional

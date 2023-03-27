@@ -1,0 +1,17 @@
+key 318   BUTTON_THUMBR
+key 317   BUTTON_THUMBL
+key 305   BUTTON_A
+key 304   BUTTON_X
+key 307   BUTTON_B
+key 308   BUTTON_Y
+key 310   BUTTON_L2
+key 311   BUTTON_L1
+key 312   BUTTON_R2
+key 313   BUTTON_R1
+key 315   BUTTON_START
+key 316   HOME
+
+axis 0x03 Y # inverted axis?
+axis 0x04 invert X
+axis 0x02 LTRIGGER
+axis 0x05 RTRIGGER

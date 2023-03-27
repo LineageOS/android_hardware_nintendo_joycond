@@ -11,6 +11,7 @@ void ctlr_mgr::epoll_event_callback(int event_fd)
 {
     for (auto& kv : unpaired_controllers) {
         auto ctlr = kv.second;
+        bool combined = ::property_get_int32("persist.joycond.combined", 1);
         if (event_fd == ctlr->get_fd()) {
             ctlr->handle_events();
             switch (ctlr->get_pairing_state()) {
@@ -35,10 +36,13 @@ void ctlr_mgr::epoll_event_callback(int event_fd)
                             std::cout << "Found right\n";
                         }
                     }
-                    if (left && right) {
+                    if (left && right && combined) {
                         add_combined_ctlr();
                         left = nullptr;
                         right = nullptr;
+                    } else {
+                        std::cout << (left ? "Left " : "Right ") << "JoyCon set to passthrough mode\n";
+                        add_passthrough_ctlr(ctlr);
                     }
                     break;
                 case phys_ctlr::PairingState::Horizontal:

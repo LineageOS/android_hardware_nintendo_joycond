@@ -212,11 +212,12 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     analog = ::property_get_int32("persist.joycond.analogtriggers", 0);
     layout = ::property_get_int32("persist.joycond.layout", 0);
 
-    pid = pid
-        | (analog << 8)
-        | (layout << 4);
+    std::cout << "Analog: " << analog << ", Layout: " << layout << std::endl;
 
-    std::cout << "Using product id " << pid << std::endl;
+    pid = pid | (analog << 0x8)
+              | (layout << 0x4);
+
+    std::cout << "Using product id " << std::hex << pid << std::endl;
 #endif
 
     // Make sure that all of this configuration remains in sync with the hid-nintendo driver.
