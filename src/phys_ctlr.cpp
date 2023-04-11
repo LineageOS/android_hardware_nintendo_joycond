@@ -291,7 +291,8 @@ phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname) :
             break;
     }
 
-    init_leds();
+    if(model != Model::Sio)
+        init_leds();
 
     // Prevent other users from having access to the evdev until it's paired
     grab();
@@ -307,10 +308,13 @@ phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname) :
     std::string driver_name;
     std::getline(fname, driver_name);
     std::cout << "driver_name: " << driver_name << std::endl;
-    if (driver_name.find("Serial") != std::string::npos || model == Model::Sio) {
+    if (driver_name.find("Serial") != std::string::npos) {
         std::cout << "Serial joy-con detected\n";
         // Turn off player LEDs by default with serial joycons by default
         set_all_player_leds(false);
+        is_serial = true;
+    } else if (model == Model::Sio) {
+        std::cout << "Setting Sio as serial, ignoring lights...\n";
         is_serial = true;
     }
 
@@ -422,9 +426,13 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
 {
     enum phys_ctlr::PairingState state = PairingState::Pairing;
 
+    // Sio has no leds, is permanently connected, and always serial
+    if(model == Model::Sio)
+        return PairingState::Virt_Procon;
+
     // leds don't function on android joycons so no way of the user knowing the pair state
 #if defined(ANDROID) || defined(__ANDROID__)
-    if (model != Model::Procon && model != Model::Snescon && model != Model::Sio)
+    if (model != Model::Procon && model != Model::Snescon)
         return PairingState::Waiting;
     else
         return PairingState::Lone;
@@ -444,9 +452,6 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
                 state = PairingState::Lone;
             else if (plus && minus)
                 state = PairingState::Virt_Procon;
-            break;
-        case Model::Sio:
-            state = PairingState::Virt_Procon;
             break;
         case Model::Left_Joycon:
             if (l ^ zl)
