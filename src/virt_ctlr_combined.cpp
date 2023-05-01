@@ -344,7 +344,13 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl, std::sh
     // Set the product information to a left joy-con's product info (but with virtual bus type)
     libevdev_set_id_vendor(virt_evdev, 0x57e);
     libevdev_set_id_product(virt_evdev, pid);
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Pretend this isn't virtual so games don't ignore it
+    // https://chromium.googlesource.com/chromiumos/platform2/+/master/vm_tools/sommelier/sommelier-gaming.cc#49
+    libevdev_set_id_bustype(virt_evdev, 0x03);
+#else
     libevdev_set_id_bustype(virt_evdev, BUS_VIRTUAL);
+#endif
     libevdev_set_id_version(virt_evdev, 0x0000);
 
     // Enable LED events

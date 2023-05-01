@@ -297,7 +297,13 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     // Set the product information to a non-existent product info (but with virtual bus type)
     libevdev_set_id_vendor(virt_evdev, 0x57e);
     libevdev_set_id_product(virt_evdev, pid); // HACK?
+#if defined(ANDROID) || defined(__ANDROID__)
+    // Pretend this isn't virtual so games don't ignore it
+    // https://chromium.googlesource.com/chromiumos/platform2/+/master/vm_tools/sommelier/sommelier-gaming.cc#49
+    libevdev_set_id_bustype(virt_evdev, 0x03);
+#else
     libevdev_set_id_bustype(virt_evdev, BUS_VIRTUAL);
+#endif
     libevdev_set_id_version(virt_evdev, 0x0000);
 
     if (phys->get_model() == phys_ctlr::Model::Sio) {
