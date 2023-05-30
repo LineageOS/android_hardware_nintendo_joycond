@@ -429,14 +429,6 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
     if(model == Model::Sio)
         return PairingState::Virt_Procon;
 
-    // leds don't function on android joycons so no way of the user knowing the pair state
-#if defined(ANDROID) || defined(__ANDROID__)
-    if (model != Model::Procon && model != Model::Snescon)
-        return PairingState::Waiting;
-    else
-        return PairingState::Lone;
-#endif
-
     if (libevdev_get_id_product(evdev) == 0x200e)
         return PairingState::Waiting;
 
@@ -447,9 +439,11 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
     switch (model) {
         case Model::Procon:
         case Model::Snescon:
+#if !(defined(ANDROID) || defined(__ANDROID__))
             if ((l | zl) && (r | zr))
                 state = PairingState::Lone;
             else if (plus && minus)
+#endif
                 state = PairingState::Virt_Procon;
             break;
         case Model::Left_Joycon:
