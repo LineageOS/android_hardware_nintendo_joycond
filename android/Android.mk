@@ -47,10 +47,10 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_PREBUILT)
 
-# External idc for ProCon
+# Disabled idc for ProCon
 include $(CLEAR_VARS)
 LOCAL_MODULE := Vendor_057e_Product_2009_Version_8001.idc
-LOCAL_SRC_FILES := android/external.idc
+LOCAL_SRC_FILES := android/disabled.idc
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR)/usr/idc
 LOCAL_MODULE_TAGS := optional
