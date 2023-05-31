@@ -40,8 +40,7 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys)
                 }
             }
 
-            if(phys->get_model() == phys_ctlr::Model::Sio && ev.type == EV_KEY) {
-                std::cout << "defining dpad remapping for sio\n";
+            if(ev.type == EV_KEY) {
                 switch (ev.code) {
                     case BTN_DPAD_UP:
                         libevdev_uinput_write_event(uidev, EV_ABS, ABS_HAT0Y, -ev.value);
@@ -232,14 +231,10 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_EAST, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_NORTH, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_WEST, NULL);
-    #if !defined(ANDROID) && !defined(__ANDROID__)
-    if (phys->get_model() == phys_ctlr::Model::Sio) {
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_UP, NULL);
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_DOWN, NULL);
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_LEFT, NULL);
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_RIGHT, NULL);
-    }
-    #endif
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_UP, NULL);
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_DOWN, NULL);
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_LEFT, NULL);
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_RIGHT, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR, NULL);
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -306,7 +301,7 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
 #endif
     libevdev_set_id_version(virt_evdev, 0x0000);
 
-    if (phys->get_model() == phys_ctlr::Model::Sio) {
+    if (phys->get_model() != phys_ctlr::Model::Sio) {
         // Enable LED events
         libevdev_enable_event_type(virt_evdev, EV_LED);
         libevdev_enable_event_code(virt_evdev, EV_LED, 0, NULL);
