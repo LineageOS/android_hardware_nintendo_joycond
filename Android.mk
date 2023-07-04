@@ -52,7 +52,8 @@ LOCAL_REQUIRED_MODULES := \
     Vendor_057e_Product_2018.kl  \
     Vendor_057e_Product_2108.kl  \
     Vendor_057e_Product_2118.kl  \
-    Vendor_057e_Product_2009_Version_8001.idc
+    Vendor_057e_Product_2009_Version_8001.idc \
+	Vendor_057e_Product_f123.idc
 
 LOCAL_MODULE := joycond
 LOCAL_INIT_RC := android/joycond.rc
