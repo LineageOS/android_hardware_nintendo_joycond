@@ -1,1 +1,0 @@
-device.internal=0
