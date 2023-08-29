@@ -58,7 +58,7 @@ LOCAL_REQUIRED_MODULES := \
 LOCAL_MODULE := joycond
 LOCAL_INIT_RC := android/joycond.rc
 LOCAL_MODULE_TAGS := optional
-LOCAL_CPPFLAGS := -std=c++17 -Wno-error -fexceptions
+LOCAL_CPPFLAGS := -std=c++17 -Wno-error -fexceptions -O2
 LOCAL_VENDOR_MODULE := true
 LOCAL_MODULE_OWNER := nintendo
 include $(BUILD_EXECUTABLE)
