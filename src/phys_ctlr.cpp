@@ -425,9 +425,9 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
 {
     enum phys_ctlr::PairingState state = PairingState::Pairing;
 
-    // Sio has no leds, is permanently connected, and always serial
-    if(model == Model::Sio)
-        return PairingState::Virt_Procon;
+#if defined(ANDROID) || defined(__ANDROID__)
+    bool combined = ::property_get_int32("persist.joycond.combined", 1);
+#endif
 
     if (libevdev_get_id_product(evdev) == 0x200e)
         return PairingState::Waiting;
@@ -439,6 +439,7 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
     switch (model) {
         case Model::Procon:
         case Model::Snescon:
+        case Model::Sio:
 #if !(defined(ANDROID) || defined(__ANDROID__))
             if ((l | zl) && (r | zr))
                 state = PairingState::Lone;
@@ -447,20 +448,34 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
                 state = PairingState::Virt_Procon;
             break;
         case Model::Left_Joycon:
+#if !(defined(ANDROID) || defined(__ANDROID__))
             if (l ^ zl)
+#endif
                 state = PairingState::Waiting;
+#if !(defined(ANDROID) || defined(__ANDROID__))
             else if (sl && sr)
                 state = PairingState::Horizontal;
             else if (l && zl)
                 state = PairingState::Lone;
+#else
+            if (!combined)
+                state = PairingState::Horizontal;
+#endif
             break;
         case Model::Right_Joycon:
+#if !(defined(ANDROID) || defined(__ANDROID__))
             if (r ^ zr)
+#endif
                 state = PairingState::Waiting;
+#if !(defined(ANDROID) || defined(__ANDROID__))
             else if (sl && sr)
                 state = PairingState::Horizontal;
             else if (r && zr)
                 state = PairingState::Lone;
+#else
+            if (!combined)
+                state = PairingState::Horizontal;
+#endif
             break;
         default:
             break;

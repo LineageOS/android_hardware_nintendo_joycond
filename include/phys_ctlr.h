@@ -6,6 +6,10 @@
 #include <optional>
 #include <string>
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#include "cutils/properties.h"
+#endif
+
 class phys_ctlr
 {
     public:
