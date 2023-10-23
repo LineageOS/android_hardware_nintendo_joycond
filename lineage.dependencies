@@ -1,0 +1,6 @@
+[
+ {
+   "repository": "android_external_libevdev",
+   "target_path": "external/libevdev""
+ }
+]
