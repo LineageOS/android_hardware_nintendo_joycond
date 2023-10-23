@@ -208,8 +208,8 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr& epoll_m
     
 #if defined(ANDROID) || defined(__ANDROID__)
     // Set analog trigger emulation and controller layout from props
-    analog = ::property_get_int32("persist.joycond.analogtriggers", 0);
-    layout = ::property_get_int32("persist.joycond.layout", 0);
+    analog = ::property_get_int32("persist.joycond.analogtriggers", 1);
+    layout = ::property_get_int32("persist.joycond.layout", 1);
 
     std::cout << "Analog: " << analog << ", Layout: " << layout << std::endl;
 
