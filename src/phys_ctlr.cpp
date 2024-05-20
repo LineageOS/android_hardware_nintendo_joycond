@@ -431,6 +431,9 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
 
     if (libevdev_get_id_product(evdev) == 0x200e)
         return PairingState::Waiting;
+    
+    if (model == Model::Sio)
+        return PairingState::Virt_Procon;
 
     // uart joy-cons should just always be willing to pair
     if (is_serial)
@@ -439,7 +442,6 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const
     switch (model) {
         case Model::Procon:
         case Model::Snescon:
-        case Model::Sio:
 #if !(defined(ANDROID) || defined(__ANDROID__))
             if ((l | zl) && (r | zr))
                 state = PairingState::Lone;
