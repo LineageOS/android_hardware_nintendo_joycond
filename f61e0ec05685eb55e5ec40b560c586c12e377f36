@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c67068f3_8b6162e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14048
+      },
+      "writtenOn": "2024-06-24T19:27:25Z",
+      "side": 1,
+      "message": "I still strongly oppose this. The referenced page in this commit message is referenced in the aosp procon keylayout to explicitly say that btn_south should be A and btn_east should be B. But as I am not a primary maintainer, I won\u0027t hard block. But if this is done, I DO want the procon kl in fwb to be changed to match. Do not cause inconsistency.",
+      "revId": "f61e0ec05685eb55e5ec40b560c586c12e377f36",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
