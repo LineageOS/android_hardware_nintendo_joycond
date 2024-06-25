@@ -33,6 +33,23 @@
       "message": "Annoys me regularly.\n\nMy vote is make this the default until we bring the toggle back AT LEAST.",
       "revId": "f61e0ec05685eb55e5ec40b560c586c12e377f36",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e9c3930_4ed2b82f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25732
+      },
+      "writtenOn": "2024-06-25T01:57:06Z",
+      "side": 1,
+      "message": "Matches \"A for confirm, B for back\" coming from the linked docs, also matches stock OS behaviour",
+      "revId": "f61e0ec05685eb55e5ec40b560c586c12e377f36",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
