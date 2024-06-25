@@ -50,6 +50,23 @@
       "message": "Matches \"A for confirm, B for back\" coming from the linked docs, also matches stock OS behaviour",
       "revId": "f61e0ec05685eb55e5ec40b560c586c12e377f36",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b81eded2_ccc890d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16185
+      },
+      "writtenOn": "2024-06-25T23:48:28Z",
+      "side": 1,
+      "message": "Device maintainers seem to prefer this.\n\nWill make FWB match.",
+      "revId": "f61e0ec05685eb55e5ec40b560c586c12e377f36",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
