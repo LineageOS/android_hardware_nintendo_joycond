@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90095609_b3496aa9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16185
+      },
+      "writtenOn": "2024-09-30T02:56:13Z",
+      "side": 1,
+      "message": "I\u0027d like to see more comments.\n\nWhitespace, formatting, errant newlines fixed.\n\nIt all makes sense and looks good, but I\u0027d personally like to see more comments.\n\nPlus, think you let the 3rds commits change id become your squash ID, bad practice, give overall its own change ID and say \"joycond: Squashed conversion to binderized AIDL HAL\", then have all sub-commits indented.",
+      "revId": "b2a8a0c40428b33d470d5a00929efcdf26c4ac4a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
