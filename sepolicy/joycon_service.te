@@ -1,0 +1,2 @@
+binder_use(joycon_service_default);
+add_service(joycon_service_default, joycon_service);
