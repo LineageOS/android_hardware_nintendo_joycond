@@ -1,0 +1,20 @@
+#type joycond, domain;
+#type joycond_exec, vendor_file_type, exec_type, file_type;
+init_daemon_domain(joycond)
+
+allow joycond input_device:dir r_dir_perms;
+allow joycond input_device:chr_file { rw_file_perms setattr };
+allow joycond uhid_device:chr_file rw_file_perms;
+
+allow joycond self:netlink_kobject_uevent_socket create_socket_perms_no_ioctl;
+
+add_service(joycond, joycon_service)
+binder_call(joycond, servicemanager)
+
+# Access to JoyCons
+r_dir_file(joycond, sysfs_hid)
+allow joycond sysfs_hid:file rw_file_perms;
+
+# TMP - Access to JoyCons - before LMK labels it
+r_dir_file(joycond, sysfs)
+set_prop(joycond, vendor_persist_joycond_prop)

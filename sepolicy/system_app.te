@@ -1,0 +1,2 @@
+# Allow system apps to use Joycond
+allow system_app joycond:binder call;
