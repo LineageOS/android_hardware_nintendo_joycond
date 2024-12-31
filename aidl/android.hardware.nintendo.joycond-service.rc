@@ -1,0 +1,5 @@
+service vendor.joycond-default /vendor/bin/hw/android.hardware.nintendo.joycond-service
+    interface aidl android.hardware.nintendo.joycond.IJoycond/default
+    class hal
+    user system
+    group system uhid
