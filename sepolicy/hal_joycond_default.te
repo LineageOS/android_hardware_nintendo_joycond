@@ -1,0 +1,27 @@
+# Copyright (c) 2024, The LineageOS Project.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+type hal_joycond_default, domain;
+hal_server_domain(hal_joycond_default, hal_joycond)
+
+type hal_joycond_default_exec, file_type, exec_type, vendor_file_type;
+init_daemon_domain(hal_joycond_default)
+
+allow hal_joycond_default servicemanager:binder transfer;
+
+allow hal_joycond_default input_device:dir r_dir_perms;
+allow hal_joycond_default input_device:chr_file { rw_file_perms setattr };
+allow hal_joycond_default uhid_device:chr_file rw_file_perms;
+
+allow hal_joycond_default self:netlink_kobject_uevent_socket create_socket_perms_no_ioctl;
