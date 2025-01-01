@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f623dc4d_8179d0bb",
+        "filename": "sepolicy/joycon_service.te",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-01T18:00:32Z",
+      "side": 1,
+      "message": "zap file",
+      "revId": "07c74c99f3230b61c5e767a5983023ca019a1873",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a7510f9_5c7c4b4e",
+        "filename": "sepolicy/system_app.te",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-01T18:00:32Z",
+      "side": 1,
+      "message": "```suggestion\n# Allow system apps to use Joycond\nallow system_app joycon_service:service_manager find;\n```",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "07c74c99f3230b61c5e767a5983023ca019a1873",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "759b12b1_a7896710",
+        "filename": "sepolicy/system_server.te",
+        "patchSetId": 6
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-01T18:00:32Z",
+      "side": 1,
+      "message": "probably can go?",
+      "revId": "07c74c99f3230b61c5e767a5983023ca019a1873",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
