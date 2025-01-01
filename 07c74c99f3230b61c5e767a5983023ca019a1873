@@ -18,6 +18,24 @@
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1af1b4a1_f7481ccf",
+        "filename": "sepolicy/joycon_service.te",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16185
+      },
+      "writtenOn": "2025-01-01T18:43:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f623dc4d_8179d0bb",
+      "revId": "07c74c99f3230b61c5e767a5983023ca019a1873",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a7510f9_5c7c4b4e",
