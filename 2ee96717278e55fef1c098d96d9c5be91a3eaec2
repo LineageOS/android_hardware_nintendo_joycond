@@ -34,6 +34,24 @@
       "parentUuid": "039decf0_bc37f37b",
       "revId": "2ee96717278e55fef1c098d96d9c5be91a3eaec2",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fe94fbc_eda960f0",
+        "filename": "aidl/src/ctlr_mgr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-13T21:28:14Z",
+      "side": 0,
+      "message": "I don\u0027t check all the code, but probably no difference.",
+      "parentUuid": "8936509f_ade54777",
+      "revId": "2ee96717278e55fef1c098d96d9c5be91a3eaec2",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }

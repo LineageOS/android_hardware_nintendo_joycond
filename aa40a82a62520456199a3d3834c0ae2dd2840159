@@ -80,6 +80,30 @@
       },
       "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0fa14ea_a38ac1ba",
+        "filename": "aidl/include/virt_ctlr_pro.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-13T21:28:14Z",
+      "side": 1,
+      "message": "Whenever I see references in classes it scares me because the lifetime of the object is opaque (just like standard pts)\nMaybe in the past, but google now rarely uses pthread in c++, they also go with cpp stdlib now.\n\nYou don\u0027t have to do it, just wanted to point out what I would do.",
+      "parentUuid": "4f2c0c34_b91f8349",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
