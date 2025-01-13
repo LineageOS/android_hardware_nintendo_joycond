@@ -6,7 +6,7 @@
 #include "virt_ctlr.h"
 #include "virt_mouse.h"
 
-#include "cutils/properties.h"
+#include <android-base/properties.h>
 
 #include <libevdev/libevdev.h>
 #include <map>
@@ -25,10 +25,10 @@ class virt_ctlr_combined : public virt_ctlr {
     std::string left_mac;
     std::string right_mac;
 
-    struct mapping *mMapping;
-    pthread_mutex_t *mapLock;
+    struct mapping &mMapping;
+    pthread_mutex_t &mapLock;
 
-    virt_mouse *mouse;
+    virt_mouse mouse;
 
     void relay_events(std::shared_ptr<phys_ctlr> phys);
     void handle_uinput_event();
@@ -36,8 +36,8 @@ class virt_ctlr_combined : public virt_ctlr {
   public:
     virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl,
                        std::shared_ptr<phys_ctlr> physr,
-                       epoll_mgr &epoll_manager, struct mapping *mMapping,
-                       pthread_mutex_t *mapLock);
+                       epoll_mgr &epoll_manager, struct mapping &mMapping,
+                       pthread_mutex_t &mapLock);
     virtual ~virt_ctlr_combined();
 
     virtual void handle_events(int fd);

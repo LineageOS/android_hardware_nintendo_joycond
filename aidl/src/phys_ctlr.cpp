@@ -1,6 +1,7 @@
 #include "phys_ctlr.h"
 
 #include <android-base/logging.h>
+#include <android-base/properties.h>
 #include <fcntl.h>
 #include <glob.h>
 #include <iostream>
@@ -10,6 +11,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <utils/Log.h>
+
+using ::android::base::GetBoolProperty;
 
 // private
 std::optional<std::string>
@@ -398,7 +401,7 @@ void phys_ctlr::handle_events() {
 enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const {
     enum phys_ctlr::PairingState state = PairingState::Pairing;
 
-    bool combined = ::property_get_int32("persist.joycond.combined", 1);
+    bool combined = GetBoolProperty(PROP_COMBINED, 1);
 
     if (libevdev_get_id_product(evdev) == 0x200e)
         return PairingState::Waiting;

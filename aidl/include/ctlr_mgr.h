@@ -26,12 +26,12 @@ class ctlr_mgr {
     void add_combined_ctlr();
     void add_virt_procon_ctlr(std::shared_ptr<phys_ctlr> phys);
 
-    struct mapping *mMapping;
-    pthread_mutex_t *mapLock;
+    struct mapping &mMapping;
+    pthread_mutex_t &mapLock;
 
   public:
-    ctlr_mgr(epoll_mgr &epoll_manager, struct mapping *mMapping,
-             pthread_mutex_t *mapLock);
+    ctlr_mgr(epoll_mgr &epoll_manager, struct mapping &mMapping,
+             pthread_mutex_t &mapLock);
     ~ctlr_mgr();
 
     void add_ctlr(const std::string &devpath, const std::string &devname);
