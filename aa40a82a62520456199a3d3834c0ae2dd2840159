@@ -104,6 +104,30 @@
       },
       "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e66cedc_2f9ba2b4",
+        "filename": "aidl/include/virt_ctlr_pro.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-01-13T21:32:17Z",
+      "side": 1,
+      "message": "for reference, i set it up somewhat intentionally to tie the lifetimes together\nand yea i was planning to swap to or try out std thread etc but this was just super easy to set up. i have a habit of writing cpp as c with classes :) \n\ni appreciate the advice, will likely implement this for a followup",
+      "parentUuid": "d0fa14ea_a38ac1ba",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
