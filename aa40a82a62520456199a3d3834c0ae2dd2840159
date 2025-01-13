@@ -33,6 +33,29 @@
       "message": "hold on",
       "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4582cbfc_cda53b90",
+        "filename": "aidl/include/virt_ctlr_pro.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2025-01-13T21:15:06Z",
+      "side": 1,
+      "message": "why isn\u0027t the mutex inside the mapping itself?\nYou should create a wrapper class\n\nclass Mapping {\n    public:\n        void doX() {\n            lock()\n            mappind.doX()\n            unlock()\n        }\n    private:\n        struct mapping mMapping;\n        pthread_mutex_t mapLock;\n\n}\n\nAnd pass around the Mapping via shared_ptr\nAlso can use std::lock_guard \u0026 std::mutex?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
