@@ -1,12 +1,11 @@
 #ifndef JOYCOND_PHYS_CTLR_H
 #define JOYCOND_PHYS_CTLR_H
 
+#include "Joycond.h"
 #include <fstream>
 #include <libevdev/libevdev.h>
 #include <optional>
 #include <string>
-
-#include "cutils/properties.h"
 
 class phys_ctlr {
   public:
