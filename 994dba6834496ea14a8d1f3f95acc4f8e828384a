@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5788e23_d1806fd3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-01-13T21:34:11Z",
+      "side": 1,
+      "message": "NOTE FOR FUTURE: will work on updating threading and locking impl in a followup change. getting these fixes in now.",
+      "revId": "994dba6834496ea14a8d1f3f95acc4f8e828384a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
