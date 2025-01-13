@@ -155,10 +155,14 @@ void *Joycond::__threadLoop(void *args) {
     Joycond *const self = static_cast<Joycond *>(args);
 
     epoll_mgr epoll_manager;
-    ctlr_mgr ctlr_manager(epoll_manager, &(self->mMapping), &(self->mapLock));
+    ctlr_mgr ctlr_manager(epoll_manager, self->mMapping, self->mapLock);
     ctlr_detector ctlr_detector(ctlr_manager, epoll_manager);
 
     while (self->ready.load()) {
+        self->mMapping.analog =
+            GetBoolProperty(PROP_ANALOG, self->mMapping.analog);
+        self->mMapping.rsmouse =
+            GetBoolProperty(PROP_RSMOUSE, self->mMapping.rsmouse);
         epoll_manager.loop();
     }
 

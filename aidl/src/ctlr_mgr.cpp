@@ -145,12 +145,10 @@ void ctlr_mgr::add_virt_procon_ctlr(std::shared_ptr<phys_ctlr> phys) {
 }
 
 // public
-ctlr_mgr::ctlr_mgr(epoll_mgr &epoll_manager, struct mapping *mMapping,
-                   pthread_mutex_t *mapLock)
+ctlr_mgr::ctlr_mgr(epoll_mgr &epoll_manager, struct mapping &mMapping,
+                   pthread_mutex_t &mapLock)
     : epoll_manager(epoll_manager), unpaired_controllers(), subscribers(),
-      paired_controllers() {
-    this->mMapping = mMapping;
-    this->mapLock = mapLock;
+      paired_controllers(), mMapping(mMapping), mapLock(mapLock) {
 }
 
 ctlr_mgr::~ctlr_mgr() {}

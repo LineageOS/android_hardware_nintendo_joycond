@@ -1,13 +1,12 @@
 #ifndef JOYCOND_VIRT_CTLR_PRO
 #define JOYCOND_VIRT_CTLR_PRO
 
-#include "Joycond.h"
 #include "epoll_mgr.h"
 #include "phys_ctlr.h"
 #include "virt_ctlr.h"
 #include "virt_mouse.h"
 
-#include "cutils/properties.h"
+#include <android-base/properties.h>
 
 #include <libevdev/libevdev.h>
 #include <map>
@@ -24,17 +23,17 @@ class virt_ctlr_pro : public virt_ctlr {
     std::map<int, struct ff_effect> rumble_effects;
     std::string mac;
 
-    struct mapping *mMapping;
-    pthread_mutex_t *mapLock;
+    struct mapping &mMapping;
+    pthread_mutex_t &mapLock;
 
-    virt_mouse *mouse;
+    virt_mouse mouse;
 
     void relay_events(std::shared_ptr<phys_ctlr> phys);
     void handle_uinput_event();
 
   public:
     virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys, epoll_mgr &epoll_manager,
-                  struct mapping *mMapping, pthread_mutex_t *mapLock);
+                  struct mapping &mMapping, pthread_mutex_t &mapLock);
     virtual ~virt_ctlr_pro();
 
     virtual void handle_events(int fd);

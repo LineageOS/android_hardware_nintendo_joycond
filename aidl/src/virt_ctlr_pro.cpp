@@ -13,6 +13,8 @@
 #include <utils/Log.h>
 #include <vector>
 
+using ::android::base::SetProperty;
+
 // private
 void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
     struct input_event ev;
@@ -24,13 +26,16 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
         if (ret == LIBEVDEV_READ_STATUS_SYNC) {
             ALOGI("handle sync");
             while (ret == LIBEVDEV_READ_STATUS_SYNC) {
+                if (mMapping.rsmouse)
+                    mouse.sync_event(ev);
+
                 libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
                 ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_SYNC, &ev);
             }
         } else if (ret == LIBEVDEV_READ_STATUS_SUCCESS) {
             // relay event if rsmouse enabled
-            if (mMapping->rsmouse) {
-                if (this->mouse->relay_mouse_event(ev)) {
+            if (mMapping.rsmouse) {
+                if (mouse.relay_mouse_event(ev)) {
                     // event consumed
                     ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL,
                                               &ev);
@@ -38,39 +43,31 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
                 }
             }
 
-            if (mMapping->analog) {
-                // remap the ZL and ZR buttons to analog trigger on android
-                if (ev.type == EV_KEY && ev.code == BTN_TL2) {
-                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z, ev.value);
-                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL,
-                                              &ev);
-                    continue;
-                } else if (ev.type == EV_KEY && ev.code == BTN_TR2) {
-                    libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ,
-                                                ev.value);
-                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL,
-                                              &ev);
-                    continue;
-                }
+            // toggle rsmouse with screenshot button
+            if (ev.code == 309 && ev.value) {
+                pthread_mutex_lock(&mapLock);
+                mMapping.rsmouse = !mMapping.rsmouse;
+                pthread_mutex_unlock(&mapLock);
+                SetProperty(PROP_RSMOUSE, mMapping.rsmouse ? "1" : "0");
             }
 
-            // toggle rsmouse with screenshot button
-            if (ev.code == 309 && ev.value)
-                mMapping->rsmouse = !mMapping->rsmouse;
-
-            // EV_KEY mapping
             if (ev.type == EV_KEY) {
-                pthread_mutex_lock(mapLock);
-                std::map<uint32_t, uint32_t>::iterator event =
-                    mMapping->layout.find(ev.code);
-                if (event != mMapping->layout.end()) {
-                    libevdev_uinput_write_event(uidev, EV_KEY, event->second,
-                                                ev.value);
-                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL,
-                                              &ev);
-                    continue;
+                if (mMapping.analog) {
+                    // Second remap the ZL and ZR buttons to analog trigger
+                    if (ev.code == BTN_TL2) {
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_Z,
+                                                    ev.value);
+                        ret = libevdev_next_event(
+                            evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    } else if (ev.code == BTN_TR2) {
+                        libevdev_uinput_write_event(uidev, EV_ABS, ABS_RZ,
+                                                    ev.value);
+                        ret = libevdev_next_event(
+                            evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                        continue;
+                    }
                 }
-                pthread_mutex_unlock(mapLock);
 
                 // map dpad buttons to HAT axes
                 switch (ev.code) {
@@ -101,6 +98,21 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
                 default:
                     break;
                 }
+
+                // standard key mapping
+                pthread_mutex_lock(&mapLock);
+                std::map<uint32_t, uint32_t>::iterator event =
+                    mMapping.layout.find(ev.code);
+                if (event != mMapping.layout.end()) {
+                    libevdev_uinput_write_event(uidev, EV_KEY, event->second,
+                                                ev.value);
+
+                    pthread_mutex_unlock(&mapLock);
+                    ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL,
+                                              &ev);
+                    continue;
+                }
+                pthread_mutex_unlock(&mapLock);
             }
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
         }
@@ -217,17 +229,12 @@ void virt_ctlr_pro::handle_uinput_event() {
 
 // public
 virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys,
-                             epoll_mgr &epoll_manager, struct mapping *mMapping,
-                             pthread_mutex_t *mapLock)
+                             epoll_mgr &epoll_manager, struct mapping &mMapping,
+                             pthread_mutex_t &mapLock)
     : phys(phys), epoll_manager(epoll_manager), subscriber(nullptr),
       virt_evdev(nullptr), uidev(nullptr), uifd(-1), rumble_effects(),
-      mac(phys->get_mac_addr()) {
+      mac(phys->get_mac_addr()), mMapping(mMapping), mapLock(mapLock) {
     int ret;
-
-    this->mMapping = mMapping;
-    this->mapLock = mapLock;
-
-    this->mouse = new virt_mouse();
 
     uifd = open("/dev/uinput", O_RDWR);
     if (uifd < 0) {
@@ -263,11 +270,8 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys,
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_DPAD_RIGHT, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL, NULL);
     libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR, NULL);
-    // Only define these if analog emulation is disabled via prop
-    if (!mMapping->analog) {
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL2, NULL);
-        libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR2, NULL);
-    }
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TL2, NULL);
+    libevdev_enable_event_code(virt_evdev, EV_KEY, BTN_TR2, NULL);
 
     struct input_absinfo absconfig = {0};
     absconfig.minimum = -32767;
@@ -291,7 +295,7 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys,
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0Y, &dpad_absconfig);
 
     // Emulate analog triggers for android
-    if (mMapping->analog) {
+    if (mMapping.analog) {
         struct input_absinfo absconfig_fake = {0};
         absconfig_fake.minimum = 0;
         absconfig_fake.maximum = 1;
@@ -346,8 +350,6 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys,
 
 virt_ctlr_pro::~virt_ctlr_pro() {
     epoll_manager.remove_subscriber(subscriber);
-
-    delete this->mouse;
 
     libevdev_uinput_destroy(uidev);
     close(uifd);
