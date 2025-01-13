@@ -56,6 +56,30 @@
       },
       "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f2c0c34_b91f8349",
+        "filename": "aidl/include/virt_ctlr_pro.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-01-13T21:21:23Z",
+      "side": 1,
+      "message": "re: mapping class, might be out of scope for this change but can certainly do that\n\nre: guard and shared_ptr etc, i generally hate std::mutex and the cpp std threading stuff in general, as does google it appears if you do a quick search for pthread_mutex_t in cpp files on cs.android.\ni can look at redoing this with shared_ptr etc but is this really any worse in terms of end product?",
+      "parentUuid": "4582cbfc_cda53b90",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "aa40a82a62520456199a3d3834c0ae2dd2840159",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
