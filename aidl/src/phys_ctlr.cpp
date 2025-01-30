@@ -135,104 +135,9 @@ void phys_ctlr::init_leds() {
     }
 }
 
-void phys_ctlr::handle_event(struct input_event const &ev) {
-    int type = ev.type;
-    int code = ev.code;
-    int val = ev.value;
-
-    if (type != EV_KEY)
-        return;
-
-    switch (model) {
-    case Model::Procon:
-    case Model::Snescon:
-        switch (code) {
-        case BTN_TL:
-            l = val;
-            break;
-        case BTN_TL2:
-            zl = val;
-            break;
-        case BTN_TR:
-            r = val;
-            break;
-        case BTN_TR2:
-            zr = val;
-            break;
-        case BTN_START:
-            plus = val;
-            break;
-        case BTN_SELECT:
-            minus = val;
-            break;
-        default:
-            break;
-        }
-        break;
-    case Model::Sio:
-        switch (code) {
-        case BTN_TL:
-            l = val;
-            break;
-        case BTN_TL2:
-            zl = val;
-            break;
-        case BTN_TR:
-            r = val;
-            break;
-        case BTN_TR2:
-            zr = val;
-            break;
-        default:
-            break;
-        }
-        break;
-    case Model::Left_Joycon:
-        switch (code) {
-        case BTN_TL:
-            l = val;
-            break;
-        case BTN_TL2:
-            zl = val;
-            break;
-        case BTN_TR:
-            sl = val;
-            break;
-        case BTN_TR2:
-            sr = val;
-            break;
-        default:
-            break;
-        }
-        break;
-    case Model::Right_Joycon:
-        switch (code) {
-        case BTN_TL:
-            sl = val;
-            break;
-        case BTN_TL2:
-            sr = val;
-            break;
-        case BTN_TR:
-            r = val;
-            break;
-        case BTN_TR2:
-            zr = val;
-            break;
-        default:
-            break;
-        }
-        break;
-    default:
-        break;
-    }
-}
-
 // public
 phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname)
     : devpath(devpath), devname(devname), evdev(nullptr), is_serial(false) {
-
-    zero_triggers();
 
     int fd = open(devname.c_str(), O_RDWR | O_NONBLOCK);
     if (fd < 0) {
@@ -294,13 +199,13 @@ phys_ctlr::phys_ctlr(std::string const &devpath, std::string const &devname)
     std::string driver_name;
     std::getline(fname, driver_name);
     ALOGI("driver_name: %s", driver_name.c_str());
-    if (driver_name.find("Serial") != std::string::npos) {
+    if (model == Model::Sio) {
+        ALOGI("Setting Sio as serial, ignoring lights...");
+        is_serial = true;
+    } else if (driver_name.find("Serial") != std::string::npos) {
         ALOGI("Serial joy-con detected");
         // Turn off player LEDs by default with serial joycons by default
         set_all_player_leds(false);
-        is_serial = true;
-    } else if (model == Model::Sio) {
-        ALOGI("Setting Sio as serial, ignoring lights...");
         is_serial = true;
     }
 
@@ -329,6 +234,9 @@ bool phys_ctlr::set_player_led(int index, bool on) {
 }
 
 bool phys_ctlr::set_all_player_leds(bool on) {
+    if (model == Model::Sio)
+        return false;
+
     for (int i = 0; i < 4; i++) {
         if (!set_player_led(i, on))
             return false;
@@ -385,15 +293,6 @@ void phys_ctlr::handle_events() {
     int ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
     while (ret == LIBEVDEV_READ_STATUS_SYNC ||
            ret == LIBEVDEV_READ_STATUS_SUCCESS) {
-        if (ret == LIBEVDEV_READ_STATUS_SYNC) {
-            ALOGI("handle sync");
-            while (ret == LIBEVDEV_READ_STATUS_SYNC) {
-                handle_event(ev);
-                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_SYNC, &ev);
-            }
-        } else if (ret == LIBEVDEV_READ_STATUS_SUCCESS) {
-            handle_event(ev);
-        }
         ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
     }
 }
@@ -432,8 +331,4 @@ enum phys_ctlr::PairingState phys_ctlr::get_pairing_state() const {
         break;
     }
     return state;
-}
-
-void phys_ctlr::zero_triggers() {
-    l = zl = r = zr = sl = sr = plus = minus = 0;
 }

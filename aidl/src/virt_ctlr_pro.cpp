@@ -295,17 +295,16 @@ virt_ctlr_pro::virt_ctlr_pro(std::shared_ptr<phys_ctlr> phys,
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0Y, &dpad_absconfig);
 
     // Emulate analog triggers for android
-    if (mMapping.analog) {
-        struct input_absinfo absconfig_fake = {0};
-        absconfig_fake.minimum = 0;
-        absconfig_fake.maximum = 1;
-        absconfig_fake.fuzz = 0;
-        absconfig_fake.flat = 0;
+    struct input_absinfo absconfig_fake = {0};
+    absconfig_fake.minimum = 0;
+    absconfig_fake.maximum = 1;
+    absconfig_fake.fuzz = 0;
+    absconfig_fake.flat = 0;
 
-        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
-        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
-    }
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
 
+    // Haptics
     libevdev_enable_event_type(virt_evdev, EV_FF);
     libevdev_enable_event_code(virt_evdev, EV_FF, FF_RUMBLE, NULL);
     libevdev_enable_event_code(virt_evdev, EV_FF, FF_PERIODIC, NULL);
@@ -410,6 +409,9 @@ bool virt_ctlr_pro::set_player_led(int index, bool on) {
 }
 
 bool virt_ctlr_pro::set_all_player_leds(bool on) {
+    if (phys->get_model() != phys_ctlr::Model::Sio)
+        return false;
+
     for (int i = 0; i < 4; i++) {
         if (!set_player_led(i, on))
             return false;

@@ -332,22 +332,27 @@ virt_ctlr_combined::virt_ctlr_combined(std::shared_ptr<phys_ctlr> physl,
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RX, &absconfig);
     libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RY, &absconfig);
 
-    // Emulate analog triggers (if prop set) and HAT for android
+    // HAT for dpad
+    struct input_absinfo dpad_absconfig = {0};
+    dpad_absconfig.minimum = -1;
+    dpad_absconfig.maximum = 1;
+    dpad_absconfig.fuzz = 0;
+    dpad_absconfig.flat = 0;
+
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0X, &dpad_absconfig);
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0Y, &dpad_absconfig);
+
+    // Emulate analog triggers for android
     struct input_absinfo absconfig_fake = {0};
     absconfig_fake.minimum = 0;
     absconfig_fake.maximum = 1;
     absconfig_fake.fuzz = 0;
     absconfig_fake.flat = 0;
 
-    if (mMapping.analog) {
-        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
-        libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
-    }
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_Z, &absconfig_fake);
+    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_RZ, &absconfig_fake);
 
-    absconfig_fake.minimum = -1;
-
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0X, &absconfig_fake);
-    libevdev_enable_event_code(virt_evdev, EV_ABS, ABS_HAT0Y, &absconfig_fake);
+    // Haptics
     libevdev_enable_event_type(virt_evdev, EV_FF);
     libevdev_enable_event_code(virt_evdev, EV_FF, FF_RUMBLE, NULL);
     libevdev_enable_event_code(virt_evdev, EV_FF, FF_PERIODIC, NULL);
