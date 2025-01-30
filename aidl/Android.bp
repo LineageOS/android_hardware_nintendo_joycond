@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2024-2025 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,26 @@ aidl_interface {
     name: "android.hardware.nintendo.joycond",
     vendor_available: true,
     srcs: ["android/**/*.aidl"],
-    unstable: true,
+    stability: "vintf",
+    backend: {
+        java: {
+            sdk_version: "module_current",
+        },
+    },
+    versions_with_info: [
+        {
+            version: "1",
+            imports: [],
+        },
+    ],
+    frozen: true,
 }
 
 cc_binary {
     name: "android.hardware.nintendo.joycond-service",
     relative_install_path: "hw",
     init_rc: ["android.hardware.nintendo.joycond-service.rc"],
+    vintf_fragments: ["android.hardware.nintendo.joycond-service.xml"],
     vendor: true,
     required: [
         "Vendor_057e_Product_2008.idc",
@@ -45,7 +58,7 @@ cc_binary {
         "libutils",
         "libevdev",
         "libnl",
-        "android.hardware.nintendo.joycond-ndk"
+        "android.hardware.nintendo.joycond-V1-ndk",
     ],
     cppflags: [
         "-std=c++17",
