@@ -27,14 +27,12 @@ class phys_ctlr {
     std::fstream player_leds[4];
     std::fstream player_led_triggers[4];
     std::fstream home_led;
-    bool l, zl, r, zr, sl, sr, plus, minus;
     enum Model model;
     std::string mac_addr;
 
     std::optional<std::string> get_first_glob_path(std::string const &pattern);
     std::optional<std::string> get_led_path(std::string const &name);
     void init_leds();
-    void handle_event(struct input_event const &ev);
 
   public:
     phys_ctlr(std::string const &devpath, std::string const &devname);
@@ -53,7 +51,6 @@ class phys_ctlr {
     void grab() { libevdev_grab(evdev, LIBEVDEV_GRAB); }
     void ungrab() { libevdev_grab(evdev, LIBEVDEV_UNGRAB); }
     struct libevdev *get_evdev() { return evdev; }
-    void zero_triggers();
     const std::string &get_mac_addr() { return mac_addr; }
     bool is_serial_ctlr() const { return is_serial; }
 };
