@@ -1,5 +1,5 @@
 #include <fcntl.h>
-#include <iostream>
+#include <fstream>
 #include <sys/stat.h>
 
 #include <android-base/properties.h>
@@ -178,13 +178,18 @@ void Joycond::parseLayoutFromFile() {
     // check if folder exists
     struct stat st = {0};
     if (stat(FOLDER_LAYOUT, &st) == -1) {
-        mkdir(FOLDER_LAYOUT, 0644);
+        mkdir(FOLDER_LAYOUT, 0664);
     }
 
     if (stat(FILE_LAYOUT, &st) == -1) {
         std::ofstream writer(FILE_LAYOUT);
-        writer << DEFAULT_LAYOUT << std::endl;
-        writer.close();
+        if (!writer) {
+            ALOGE("Failed to read file %s, err: %s", FILE_LAYOUT, strerror(errno));
+        }
+        if (writer.is_open()) {
+            writer << DEFAULT_LAYOUT << std::endl;
+            writer.close();
+        }
         readLayout = DEFAULT_LAYOUT;
     } else {
         std::ifstream reader(FILE_LAYOUT);
