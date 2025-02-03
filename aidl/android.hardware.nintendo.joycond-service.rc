@@ -1,3 +1,6 @@
+on post-fs-data
+    mkdir /data/vendor/joycond 0775 system system
+
 service vendor.joycond-default /vendor/bin/hw/android.hardware.nintendo.joycond-service
     interface aidl android.hardware.nintendo.joycond.IJoycond/default
     class hal

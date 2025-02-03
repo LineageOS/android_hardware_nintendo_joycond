@@ -1,5 +1,5 @@
 #include <fcntl.h>
-#include <iostream>
+#include <fstream>
 #include <sys/stat.h>
 
 #include <android-base/properties.h>
@@ -175,16 +175,17 @@ void Joycond::parseLayoutFromFile() {
     std::string buf;
     std::string readLayout;
 
-    // check if folder exists
     struct stat st = {0};
-    if (stat(FOLDER_LAYOUT, &st) == -1) {
-        mkdir(FOLDER_LAYOUT, 0644);
-    }
 
     if (stat(FILE_LAYOUT, &st) == -1) {
         std::ofstream writer(FILE_LAYOUT);
-        writer << DEFAULT_LAYOUT << std::endl;
-        writer.close();
+        if (!writer) {
+            ALOGE("Failed to read file %s, err: %s", FILE_LAYOUT, strerror(errno));
+        }
+        if (writer.is_open()) {
+            writer << DEFAULT_LAYOUT << std::endl;
+            writer.close();
+        }
         readLayout = DEFAULT_LAYOUT;
     } else {
         std::ifstream reader(FILE_LAYOUT);
@@ -197,17 +198,14 @@ void Joycond::parseLayoutFromFile() {
 
     std::stringstream stream(readLayout);
     std::string tok;
-    while (!stream.eof()) {
-        const char *ctok = tok.c_str();
-        getline(stream, tok, ';');
-        ALOGI("Got pairing %s", ctok);
-
-        std::pair<uint32_t, uint32_t> mPair;
-        ret = sscanf(ctok, "%d,%d", &mPair.first, &mPair.second);
-        if (ret != 2)
-            ALOGE("Failed to parse pair from %s", ctok);
-        else
-            mMapping.layout.insert(mPair);
+    while (std::getline(stream, tok, ';')) {
+        uint32_t first, second;
+        if (sscanf(tok.c_str(), "%u,%u", &first, &second) == 2) {
+            std::cout << "Got pairing: " << first << ", " << second << std::endl;
+            mMapping.layout.insert({first, second});
+        } else {
+            std::cerr << "Failed to parse pair from: " << tok << std::endl;
+        }
     }
 }
 
