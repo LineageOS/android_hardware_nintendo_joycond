@@ -16,6 +16,24 @@
       "message": "Don\u0027t do that?\nmkdir is 90% your problem, you need to do that in .rc before the hal starts\nand keep using system:{system,uhid} please",
       "revId": "abad7352f31e11e6d9ad272da76f07a48f4c20f5",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc06bec5_1eb42d7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-02-05T15:23:19Z",
+      "side": 1,
+      "message": "did extensive testing, using either the folder creation in rc or mkdir in code with system:system had same result--ofstream could not make the file, permission denied. was using 664 system:system permissions with user and group set to system. when I made this group it worked. note all other /data/vendor subfolders for Hal\u0027s etc are owned by groups. if you have an explanation or suggestion as to why it didn\u0027t work before be my guest.",
+      "parentUuid": "f5e131f5_0a021212",
+      "revId": "abad7352f31e11e6d9ad272da76f07a48f4c20f5",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
