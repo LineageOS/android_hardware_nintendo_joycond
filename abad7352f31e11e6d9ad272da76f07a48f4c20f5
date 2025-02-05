@@ -59,6 +59,30 @@
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55849b0b_7f8e87e1",
+        "filename": "aidl/src/Joycond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-02-05T20:26:25Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "0376c50c_ff753891",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 35
+      },
+      "revId": "abad7352f31e11e6d9ad272da76f07a48f4c20f5",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31135f7b_54254018",
@@ -72,6 +96,30 @@
       "writtenOn": "2025-02-05T16:36:53Z",
       "side": 1,
       "message": "```suggestion\n    while (std::getline(stream, tok, \u0027;\u0027)) {\n        uint32_t first, second;\n        if (sscanf(tok.c_str(), \"%u,%u\", \u0026first, \u0026second) \u003d\u003d 2) {\n            std::cout \u003c\u003c \"Got pairing: \" \u003c\u003c first \u003c\u003c \", \" \u003c\u003c second \u003c\u003c std::endl;\n            mMapping.layout.insert({first, second});\n        } else {\n            std::cerr \u003c\u003c \"Failed to parse pair from: \" \u003c\u003c tok \u003c\u003c std::endl;\n        }\n    }\n```\n\nusing oef as the check likely causes you to run always print an error",
+      "range": {
+        "startLine": 205,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 5
+      },
+      "revId": "abad7352f31e11e6d9ad272da76f07a48f4c20f5",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2feac10e_7c88b3ea",
+        "filename": "aidl/src/Joycond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 27741
+      },
+      "writtenOn": "2025-02-05T20:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31135f7b_54254018",
       "range": {
         "startLine": 205,
         "startChar": 0,
