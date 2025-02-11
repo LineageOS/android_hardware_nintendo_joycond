@@ -13,5 +13,7 @@
 # limitations under the License.
 
 # Joycond
+/data/vendor/joycond(/.*)?                                                    u:object_r:vendor_joycond_data_file:s0
+
 /(vendor|system/vendor)/bin/joycond                                           u:object_r:joycond_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.nintendo\.joycond-service   u:object_r:joycond_exec:s0
