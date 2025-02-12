@@ -1,5 +1,5 @@
-#type joycond, domain;
-#type joycond_exec, vendor_file_type, exec_type, file_type;
+type joycond, domain;
+type joycond_exec, vendor_file_type, exec_type, file_type;
 init_daemon_domain(joycond)
 
 allow joycond input_device:dir r_dir_perms;

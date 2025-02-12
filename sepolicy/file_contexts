@@ -13,4 +13,5 @@
 # limitations under the License.
 
 # Joycond
+/(vendor|system/vendor)/bin/joycond                                           u:object_r:joycond_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.nintendo\.joycond-service   u:object_r:joycond_exec:s0
