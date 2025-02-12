@@ -1,0 +1,3 @@
+# JoyCons
+persist.joycond. u:object_r:vendor_persist_joycond_prop:s0
+persist.vendor.joycond. u:object_r:vendor_persist_joycond_prop:s0
