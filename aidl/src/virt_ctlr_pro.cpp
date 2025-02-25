@@ -14,7 +14,7 @@
 #include <vector>
 
 using ::android::base::SetProperty;
-
+using ::android::base::GetProperty;
 // private
 void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
     struct input_event ev;
@@ -44,11 +44,10 @@ void virt_ctlr_pro::relay_events(std::shared_ptr<phys_ctlr> phys) {
             }
 
             // toggle rsmouse with screenshot button
-            if (ev.code == 309 && ev.value) {
+            if (ev.code == 309 && ev.value && GetProperty(PROP_RSMOUSE, "1") == "1") {
                 pthread_mutex_lock(&mapLock);
                 mMapping.rsmouse = !mMapping.rsmouse;
                 pthread_mutex_unlock(&mapLock);
-                SetProperty(PROP_RSMOUSE, mMapping.rsmouse ? "1" : "0");
             }
 
             if (ev.type == EV_KEY) {
