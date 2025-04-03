@@ -110,31 +110,36 @@ bool virt_mouse::relay_mouse_event(struct input_event ev) {
     return true; // yes we did consume
 }
 
-void *virt_mouse::__mouseLoop(void *args) {
-    float _axis_x;
-    float _axis_y;
+static float _axis_x;
+static float _axis_y;
 
+void *virt_mouse::__mouseLoop(void *args) {
     virt_mouse *const self = static_cast<virt_mouse *>(args);
 
     while (self->ready.load()) {
-        // reduce atomic blocks and ensure consistent values for process
-        _axis_x = self->axis_x.load();
-        _axis_y = self->axis_y.load();
+        // if we are writing the same values, don't
+        if (_axis_x != self->axis_x.load() || _axis_y != self->axis_y.load()) {
 
-        // write value if x or y value is past dead zone else write 0
-        if (std::fabsf(_axis_x) >
-                std::stof(GetProperty(PROP_DEAD_X, DEFAULT_DEAD_X)) ||
-            std::fabsf(_axis_y) >
-                std::stof(GetProperty(PROP_DEAD_Y, DEFAULT_DEAD_Y))) {
-            libevdev_uinput_write_event(self->uidev, EV_REL, REL_X, _axis_x);
-            libevdev_uinput_write_event(self->uidev, EV_REL, REL_Y, _axis_y);
-        } else {
-            libevdev_uinput_write_event(self->uidev, EV_REL, REL_X, 0);
-            libevdev_uinput_write_event(self->uidev, EV_REL, REL_Y, 0);
+            _axis_x = self->axis_x.load();
+            _axis_y = self->axis_y.load();
+
+            // write value if x or y value is past dead zone else write 0
+            if (std::fabsf(_axis_x) >
+                    std::stof(GetProperty(PROP_DEAD_X, DEFAULT_DEAD_X)) ||
+                std::fabsf(_axis_y) >
+                    std::stof(GetProperty(PROP_DEAD_Y, DEFAULT_DEAD_Y))) {
+                libevdev_uinput_write_event(self->uidev, EV_REL, REL_X,
+                                            _axis_x);
+                libevdev_uinput_write_event(self->uidev, EV_REL, REL_Y,
+                                            _axis_y);
+            } else {
+                libevdev_uinput_write_event(self->uidev, EV_REL, REL_X, 0);
+                libevdev_uinput_write_event(self->uidev, EV_REL, REL_Y, 0);
+            }
+
+            // send SYN report regardless
+            libevdev_uinput_write_event(self->uidev, EV_SYN, SYN_REPORT, 0);
         }
-
-        // send SYN report regardless
-        libevdev_uinput_write_event(self->uidev, EV_SYN, SYN_REPORT, 0);
 
         // sleep for specified poll period
         usleep(GetUintProperty(PROP_POLL, uint32_t(DEFAULT_POLL)));
