@@ -16,6 +16,24 @@
       "message": "remind me what the purpose here was?",
       "revId": "1b9eb5734c7db4440a03eb3069a4bcbac39976e3",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36c280cd_aa328657",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 34936
+      },
+      "writtenOn": "2025-04-29T01:50:23Z",
+      "side": 1,
+      "message": "It was to allow toggling disabling the virtual mouse emulation toggle using a property. Useful for unbinding the screenshot keys to be used other than toggling that one feature alone.\n\nThe toggle UI itself then should be added in the Switch settings app to set said property.",
+      "parentUuid": "cc7f65b3_915a6704",
+      "revId": "1b9eb5734c7db4440a03eb3069a4bcbac39976e3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
     }
   ]
 }
