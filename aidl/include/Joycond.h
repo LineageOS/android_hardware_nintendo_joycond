@@ -20,6 +20,19 @@
 #define PROP_COMBINED "persist.vendor.joycond.combined"
 #define PROP_ANALOG "persist.vendor.joycond.analog"
 #define PROP_RSMOUSE "persist.vendor.joycond.rsmouse"
+#define PROP_LS_SENSE "persist.vendor.joycond.ls_sense"
+#define PROP_LS_DEAD "persist.vendor.joycond.ls_dead"
+#define PROP_LS_LIMIT "persist.vendor.joycond.ls_limit"
+#define PROP_RS_SENSE "persist.vendor.joycond.rs_sense"
+#define PROP_RS_DEAD "persist.vendor.joycond.rs_dead"
+#define PROP_RS_LIMIT "persist.vendor.joycond.rs_limit"
+
+#define DEFAULT_LS_SENSE "1"
+#define DEFAULT_LS_DEAD "1"
+#define DEFAULT_LS_DEAD "1"
+#define DEFAULT_RS_SENSE "1"
+#define DEFAULT_RS_DEAD "1"
+#define DEFAULT_RS_DEAD "1"
 
 #define FOLDER_LAYOUT "/data/vendor/joycond/"
 #define FILE_LAYOUT \
@@ -42,6 +55,13 @@ struct mapping {
     bool combined;
     bool analog;
     bool rsmouse;
+
+    float sense_l;
+    float dead_l;
+    float limit_l;
+    float sense_r;
+    float dead_r;
+    float limit_r;
 };
 
 namespace aidl::android::hardware::nintendo::joycond {
@@ -67,6 +87,18 @@ struct Joycond : public BnJoycond {
     ::ndk::ScopedAStatus setRsmouse(bool rsmouse) override;
 
     ::ndk::ScopedAStatus getRsmouse(bool *_aidl_return) override;
+
+    ::ndk::ScopedAStatus setSense(bool right, float sense) override;
+
+    ::ndk::ScopedAStatus getSense(bool right, float *_aidl_return) override;
+
+    ::ndk::ScopedAStatus setDead(bool right, float dead) override;
+
+    ::ndk::ScopedAStatus getDead(bool right, float *_aidl_return) override;
+
+    ::ndk::ScopedAStatus setLimit(bool right, float limit) override;
+
+    ::ndk::ScopedAStatus getLimit(bool right, float *_aidl_return) override;
 
     struct mapping mMapping;
     pthread_mutex_t mapLock;

@@ -24,10 +24,23 @@ Joycond::Joycond() {
     mMapping.analog = GetBoolProperty(PROP_ANALOG, true);
     mMapping.rsmouse = GetBoolProperty(PROP_RSMOUSE, true);
 
+    mMapping.sense_l = std::stof(GetProperty(PROP_LS_SENSE, DEFAULT_LS_SENSE));
+    mMapping.dead_l = std::stof(GetProperty(PROP_LS_DEAD, DEFAULT_LS_DEAD));
+    mMapping.limit_l = std::stof(GetProperty(PROP_LS_LIMIT, DEFAULT_LS_LIMIT));
+    mMapping.sense_r = std::stof(GetProperty(PROP_RS_SENSE, DEFAULT_RS_SENSE));
+    mMapping.dead_r = std::stof(GetProperty(PROP_RS_DEAD, DEFAULT_RS_DEAD));
+    mMapping.limit_r = std::stof(GetProperty(PROP_RS_LIMIT, DEFAULT_RS_LIMIT))
+
     // ensure props set for first run
     SetProperty(PROP_COMBINED, mMapping.combined ? "1" : "0");
     SetProperty(PROP_ANALOG, mMapping.analog ? "1" : "0");
     SetProperty(PROP_RSMOUSE, mMapping.rsmouse ? "1" : "0");
+    SetProperty(PROP_LS_SENSE, mMapping.sense_l);
+    SetProperty(PROP_LS_DEAD, mMapping.dead_l);
+    SetProperty(PROP_LS_LIMIT, mMapping.limit_l);
+    SetProperty(PROP_RS_SENSE, mMapping.sense_r);
+    SetProperty(PROP_RS_DEAD, mMapping.dead_r);
+    SetProperty(PROP_RS_LIMIT, mMapping.limit_r);
 
     ready.store(true);
     if (pthread_mutex_init(&mapLock, NULL)) {
@@ -146,6 +159,81 @@ Joycond::~Joycond() {
 ::ndk::ScopedAStatus Joycond::getRsmouse(bool *_aidl_return) {
     pthread_mutex_lock(&mapLock);
     *_aidl_return = mMapping.rsmouse;
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::setSense(bool right, float sense) {
+    pthread_mutex_lock(&mapLock);
+    if (right) {
+        mMapping.sense_r = sense;
+        SetProperty(PROP_RS_SENSE, sense);
+    } else {
+        mMapping.sense_l = sense;
+        SetProperty(PROP_LS_SENSE, sense);
+    }
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::getSense(bool right, float *_aidl_return) {
+    pthread_mutex_lock(&mapLock);
+    if (right)
+        *_aidl_return = mMapping.sense_r;
+    else
+        *_aidl_return = mMapping.sense_l;
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::setDead(bool right, float dead) {
+    pthread_mutex_lock(&mapLock);
+    if (right) {
+        mMapping.dead_r = dead;
+        SetProperty(PROP_RS_DEAD, dead);
+    } else {
+        mMapping.dead_l = dead;
+        SetProperty(PROP_LS_DEAD, dead);
+    }
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::getDead(bool right, float *_aidl_return) {
+    pthread_mutex_lock(&mapLock);
+    if (right)
+        *_aidl_return = mMapping.dead_r;
+    else
+        *_aidl_return = mMapping.dead_l;
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::setLimit(bool right, float limit) {
+    pthread_mutex_lock(&mapLock);
+    if (right) {
+        mMapping.limit_r = limit;
+        SetProperty(PROP_RS_LIMIT, limit);
+    } else {
+        mMapping.limit_l = limit;
+        SetProperty(PROP_LS_LIMIT, limit);
+    }
+    pthread_mutex_unlock(&mapLock);
+
+    return ScopedAStatus::ok();
+}
+
+::ndk::ScopedAStatus Joycond::getLimit(bool right, float *_aidl_return) {
+    pthread_mutex_lock(&mapLock);
+    if (right)
+        *_aidl_return = mMapping.limit_r;
+    else
+        *_aidl_return = mMapping.limit_l;
     pthread_mutex_unlock(&mapLock);
 
     return ScopedAStatus::ok();

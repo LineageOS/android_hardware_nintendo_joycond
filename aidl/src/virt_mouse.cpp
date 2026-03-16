@@ -86,12 +86,12 @@ bool virt_mouse::relay_mouse_event(struct input_event ev) {
     case ABS_RX:
         // store sensitivity-weighted X axis
         axis_x.store(ev.value *
-                     std::stof(GetProperty(PROP_SENSE_X, DEFAULT_SENSE_X)));
+                     std::stof(GetProperty(PROP_MOUSE_SENSE_X, DEFAULT_MOUSE_SENSE_X)));
         break;
     case ABS_RY:
         // store sensitivity-weighted Y axis
         axis_y.store(ev.value *
-                     std::stof(GetProperty(PROP_SENSE_Y, DEFAULT_SENSE_Y)));
+                     std::stof(GetProperty(PROP_MOUSE_SENSE_Y, DEFAULT_MOUSE_SENSE_Y)));
         break;
     case BTN_TR2:
         // pass right trigger as click
@@ -121,9 +121,9 @@ void *virt_mouse::__mouseLoop(void *args) {
         float _axis_y_update = self->axis_y.load();
 
         if (std::fabsf(_axis_x_update) <
-                std::stof(GetProperty(PROP_DEAD_X, DEFAULT_DEAD_X)) ||
+                std::stof(GetProperty(PROP_MOUSE_DEAD_X, DEFAULT_MOUSE_DEAD_X)) ||
             std::fabsf(_axis_y_update) <
-                std::stof(GetProperty(PROP_DEAD_Y, DEFAULT_DEAD_Y))) {
+                std::stof(GetProperty(PROP_MOUSE_DEAD_Y, DEFAULT_MOUSE_DEAD_Y))) {
             _axis_x_update = 0;
             _axis_y_update = 0;
         }

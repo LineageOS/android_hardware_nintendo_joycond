@@ -1,6 +1,7 @@
 #include "virt_ctlr_combined.h"
 
 #include <android-base/logging.h>
+#include <climits>
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
@@ -14,6 +15,7 @@
 #include <vector>
 
 using ::android::base::SetProperty;
+using ::android::base::GetProperty;
 
 // private
 void virt_ctlr_combined::relay_events(std::shared_ptr<phys_ctlr> phys) {
@@ -116,6 +118,36 @@ void virt_ctlr_combined::relay_events(std::shared_ptr<phys_ctlr> phys) {
                     continue;
                 }
                 pthread_mutex_unlock(&mapLock);
+            } else if (ev.type == EV_ABS) {
+                float sense, dead, limit;
+                switch (ev.code) {
+                    case ABS_X:
+                    case ABS_Y:
+                        sense = std::stof(GetProperty(PROP_LS_SENSE, DEFAULT_LS_SENSE));
+                        dead = std::stof(GetProperty(PROP_LS_DEAD, DEFAULT_LS_DEAD));
+                        limit = std::stof(GetProperty(PROP_LS_LIMIT, DEFAULT_LS_LIMIT));
+                        if (ev.value < dead)
+                            ev.value = 0;
+                        else if (ev.value > limit)
+                            ev.value = limit;
+                        ev.value *= sense;
+                        if (ev.value > 1)
+                            ev.value = 1;
+                        break;
+                    case ABS_RX:
+                    case ABS_RY:
+                        sense = std::stof(GetProperty(PROP_RS_SENSE, DEFAULT_RS_SENSE));
+                        dead = std::stof(GetProperty(PROP_RS_DEAD, DEFAULT_RS_DEAD));
+                        limit = std::stof(GetProperty(PROP_LS_LIMIT, DEFAULT_LS_LIMIT));
+                        if (ev.value < dead)
+                            ev.value = 0;
+                        else if (ev.value > limit)
+                            ev.value = limit;
+                        ev.value *= sense;
+                        if (ev.value > 1)
+                            ev.value = 1;
+                        break;
+                }
             }
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
         }

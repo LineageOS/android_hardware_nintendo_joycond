@@ -2,16 +2,16 @@
 #define JOYCOND_VIRT_MOUSE
 
 // sense multiplier from abs stick axes -> rel mouse axes
-#define PROP_SENSE_X "persist.vendor.joycond.mouse_sense.x"
-#define PROP_SENSE_Y "persist.vendor.joycond.mouse_sense.y"
-#define DEFAULT_SENSE_X "0.0003"
-#define DEFAULT_SENSE_Y "0.0003"
+#define PROP_MOUSE_SENSE_X "persist.vendor.joycond.mouse_sense.x"
+#define PROP_MOUSE_SENSE_Y "persist.vendor.joycond.mouse_sense.y"
+#define DEFAULT_MOUSE_SENSE_X "0.0003"
+#define DEFAULT_MOUSE_SENSE_Y "0.0003"
 
 // deadzone in ev value units
-#define PROP_DEAD_X "persist.vendor.joycond.mouse_dead.x"
-#define PROP_DEAD_Y "persist.vendor.joycond.mouse_dead.y"
-#define DEFAULT_DEAD_X "1"
-#define DEFAULT_DEAD_Y "1"
+#define PROP_MOUSE_DEAD_X "persist.vendor.joycond.mouse_dead.x"
+#define PROP_MOUSE_DEAD_Y "persist.vendor.joycond.mouse_dead.y"
+#define DEFAULT_MOUSE_DEAD_X "1"
+#define DEFAULT_MOUSE_DEAD_Y "1"
 
 // time to sleep in us
 #define PROP_POLL "persist.vendor.joycond.mouse_poll"
