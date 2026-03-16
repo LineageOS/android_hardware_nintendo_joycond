@@ -1,6 +1,7 @@
 #include "virt_ctlr_combined.h"
 
 #include <android-base/logging.h>
+#include <climits>
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
@@ -116,6 +117,29 @@ void virt_ctlr_combined::relay_events(std::shared_ptr<phys_ctlr> phys) {
                     continue;
                 }
                 pthread_mutex_unlock(&mapLock);
+            } else if (ev.type == EV_ABS) {
+                switch (ev.code) {
+                    case ABS_X:
+                    case ABS_Y:
+                        if (ev.value < mMapping.dead_l)
+                            ev.value = 0;
+                        else if (ev.value > mMapping.limit_l)
+                            ev.value = mMapping.limit_l;
+                        ev.value *= mMapping.sense_l;
+                        if (ev.value > 1)
+                            ev.value = 1;
+                        break;
+                    case ABS_RX:
+                    case ABS_RY:
+	                    if (ev.value < mMapping.dead_r)
+	                        ev.value = 0;
+	                    else if (ev.value > mMapping.limit_r)
+	                        ev.value = mMapping.limit_r;
+	                    ev.value *= mMapping.sense_r;
+	                    if (ev.value > 1)
+	                        ev.value = 1;
+                        break;
+                }
             }
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
         }

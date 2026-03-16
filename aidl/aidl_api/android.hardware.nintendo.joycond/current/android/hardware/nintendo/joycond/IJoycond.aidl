@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Thomas Makin
+ * Copyright (C) 2024-2026 Thomas Makin
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,4 +37,16 @@ interface IJoycond {
     void setRsmouse(in boolean rsmouse);
 
     boolean getRsmouse();
+
+    void setSense(in boolean right, in float sense);
+
+    float getSense(in boolean right);
+
+    void setDead(in boolean right, in float dead);
+
+    float getDead(in boolean right);
+
+    void setLimit(in boolean right, in float limit);
+
+    float getLimit(in boolean right);
 }
