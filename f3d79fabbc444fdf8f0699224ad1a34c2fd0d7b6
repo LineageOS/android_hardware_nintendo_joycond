@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b48f0e60_b395754c",
+        "filename": "aidl/src/virt_mouse.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2026-05-31T08:46:18Z",
+      "side": 1,
+      "message": "fyi this is a disk read for each loop, move it outside",
+      "revId": "f3d79fabbc444fdf8f0699224ad1a34c2fd0d7b6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}
